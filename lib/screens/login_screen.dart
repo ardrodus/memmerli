@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:memmerli/screens/memory_list_screen.dart';
 import 'package:memmerli/services/auth_service.dart';
 import 'package:memmerli/theme/app_colors.dart';
 
@@ -47,11 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (success) {
         // Navigate to memory list screen
         if (mounted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const MemoryListScreen(),
-            ),
-          );
+          Navigator.of(context).pushReplacementNamed('/memories');
         }
       } else {
         setState(() {

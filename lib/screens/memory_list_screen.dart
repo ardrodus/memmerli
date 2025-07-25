@@ -4,6 +4,7 @@ import 'package:memmerli/screens/memory_entry_screen.dart';
 import 'package:memmerli/services/auth_service.dart';
 import 'package:memmerli/services/memory_service.dart';
 import 'package:memmerli/theme/app_colors.dart';
+import 'package:memmerli/widgets/app_drawer.dart';
 import 'package:memmerli/widgets/timeline_list.dart';
 
 class MemoryListScreen extends StatefulWidget {
@@ -80,20 +81,10 @@ class _MemoryListScreenState extends State<MemoryListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Memmerli'),
+        title: const Text('Memories'),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await AuthService.logout();
-              if (mounted) {
-                Navigator.of(context).pushReplacementNamed('/');
-              }
-            },
-          ),
-        ],
       ),
+      drawer: const AppDrawer(currentRoute: '/memories'),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _hasError
