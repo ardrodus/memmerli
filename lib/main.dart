@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memmerli/screens/memory_selection_screen.dart';
 import 'package:memmerli/screens/login_screen.dart';
 import 'package:memmerli/screens/memory_list_screen.dart';
 import 'package:memmerli/screens/profile_screen.dart';
@@ -24,6 +25,7 @@ class MemmerliApp extends StatelessWidget {
         '/': (context) => const LoginScreen(),
         '/memories': (context) => const MemoryListScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/memory-selection': (context) => const MemorySelectionScreen(),
       },
     );
   }

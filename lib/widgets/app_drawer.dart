@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:memmerli/screens/memory_selection_screen.dart';
 import 'package:memmerli/screens/memory_list_screen.dart';
 import 'package:memmerli/screens/profile_screen.dart';
 import 'package:memmerli/services/auth_service.dart';
@@ -51,6 +52,25 @@ class AppDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const ProfileScreen(),
+                  ),
+                );
+              } else {
+                Navigator.pop(context); // Just close drawer
+              }
+            },
+          ),
+          _buildMenuItem(
+            context: context,
+            icon: Icons.add_circle_outline,
+            title: 'Get Started',
+            isSelected: currentRoute == '/memory-selection',
+            onTap: () {
+              if (currentRoute != '/memory-selection') {
+                Navigator.pop(context); // Close drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MemorySelectionScreen(),
                   ),
                 );
               } else {
