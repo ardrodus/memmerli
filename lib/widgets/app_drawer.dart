@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:memmerli/screens/memory_list_screen.dart';
 import 'package:memmerli/screens/profile_screen.dart';
 import 'package:memmerli/services/auth_service.dart';
@@ -93,10 +94,34 @@ class AppDrawer extends StatelessWidget {
                 width: 2,
               ),
             ),
-            child: const Icon(
-              Icons.favorite,
-              size: 30,
-              color: AppColors.primary1,
+            child: ClipOval(
+              child: kIsWeb 
+                ? Image.network(
+                    '/assets/images/LoginIcon.png',
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.memory,
+                        size: 30,
+                        color: AppColors.primary1,
+                      );
+                    },
+                  )
+                : Image.asset(
+                    'assets/images/LoginIcon.png',
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.memory,
+                        size: 30,
+                        color: AppColors.primary1,
+                      );
+                    },
+                  ),
             ),
           ),
           const SizedBox(height: 16),
