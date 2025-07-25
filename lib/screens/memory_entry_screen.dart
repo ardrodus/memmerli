@@ -7,11 +7,13 @@ import 'package:memmerli/theme/app_colors.dart';
 class MemoryEntryScreen extends StatefulWidget {
   final String userId;
   final Memory? memory;
+  final MemoryType memoryType;
 
   const MemoryEntryScreen({
     Key? key,
     required this.userId,
     this.memory,
+    this.memoryType = MemoryType.memory,
   }) : super(key: key);
 
   @override
@@ -27,11 +29,13 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
   String? _selectedVideoPath;
   bool _isLoading = false;
   bool _isEditMode = false;
+  late MemoryType _memoryType;
 
   @override
   void initState() {
     super.initState();
     _isEditMode = widget.memory != null;
+    _memoryType = widget.memory?.type ?? widget.memoryType;
     
     // Initialize controllers with existing memory data or empty strings
     _titleController = TextEditingController(text: widget.memory?.title ?? '');
@@ -126,6 +130,7 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
           date: _selectedDate,
           imagePath: _selectedImagePath,
           videoPath: _selectedVideoPath,
+          type: _memoryType,
         );
         
         await MemoryService.updateMemory(updatedMemory);
@@ -138,6 +143,7 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
           date: _selectedDate,
           imagePath: _selectedImagePath,
           videoPath: _selectedVideoPath,
+          type: _memoryType,
         );
       }
 
@@ -298,7 +304,9 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditMode ? 'Edit Memory' : 'New Memory'),
+        title: Text(_isEditMode 
+          ? 'Edit ${_memoryType == MemoryType.memory ? 'Memory' : 'Recipe'}' 
+          : 'New ${_memoryType == MemoryType.memory ? 'Memory' : 'Recipe'}'),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

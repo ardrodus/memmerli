@@ -145,14 +145,26 @@ class TimelineItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
-                Text(
-                  memory.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary2,
-                  ),
+                // Title with icon based on memory type
+                Row(
+                  children: [
+                    Icon(
+                      memory.type == MemoryType.memory ? Icons.photo_album : Icons.restaurant_menu,
+                      size: 16,
+                      color: memory.type == MemoryType.memory ? AppColors.secondary1 : AppColors.secondary2,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        memory.title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary2,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 
                 const SizedBox(height: 8),
@@ -235,13 +247,15 @@ class TimelineItem extends StatelessWidget {
       );
     }
     
-    // No image or video
+    // No image or video - use different color based on memory type
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       child: Container(
         height: 20,
         width: double.infinity,
-        color: AppColors.secondary1.withOpacity(0.5),
+        color: memory.type == MemoryType.memory 
+            ? AppColors.secondary1.withOpacity(0.5) 
+            : AppColors.secondary2.withOpacity(0.5),
       ),
     );
   }

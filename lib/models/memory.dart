@@ -1,3 +1,8 @@
+enum MemoryType {
+  memory,
+  recipe
+}
+
 class Memory {
   final String id;
   final String userId;
@@ -8,6 +13,7 @@ class Memory {
   final String? videoPath;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final MemoryType type;
 
   Memory({
     required this.id,
@@ -19,6 +25,7 @@ class Memory {
     this.videoPath,
     required this.createdAt,
     required this.updatedAt,
+    this.type = MemoryType.memory,
   });
 
   // Create a Memory from JSON data
@@ -33,6 +40,9 @@ class Memory {
       videoPath: json['videoPath'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      type: json['type'] != null 
+          ? MemoryType.values[json['type'] as int] 
+          : MemoryType.memory,
     );
   }
 
@@ -48,6 +58,7 @@ class Memory {
       'videoPath': videoPath,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'type': type.index,
     };
   }
 
@@ -62,6 +73,7 @@ class Memory {
     String? videoPath,
     DateTime? createdAt,
     DateTime? updatedAt,
+    MemoryType? type,
   }) {
     return Memory(
       id: id ?? this.id,
@@ -73,6 +85,7 @@ class Memory {
       videoPath: videoPath ?? this.videoPath,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      type: type ?? this.type,
     );
   }
 }

@@ -97,7 +97,7 @@ class AppDrawer extends StatelessWidget {
             child: ClipOval(
               child: kIsWeb 
                 ? Image.network(
-                    '/assets/images/LoginIcon.png',
+                    '/assets/images/AppIcon2.png',
                     width: 60,
                     height: 60,
                     fit: BoxFit.cover,
@@ -110,7 +110,7 @@ class AppDrawer extends StatelessWidget {
                     },
                   )
                 : Image.asset(
-                    'assets/images/LoginIcon.png',
+                    'assets/images/AppIcon2.png',
                     width: 60,
                     height: 60,
                     fit: BoxFit.cover,

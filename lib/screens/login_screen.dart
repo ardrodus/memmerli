@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.only(bottom: 40),
                         child: kIsWeb 
                           ? Image.network(
-                              '/assets/images/LoginIcon.png',
+                              '/assets/images/AppIcon1.png',
                               width: 150,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             )
                           : Image.asset(
-                              'assets/images/LoginIcon.png',
+                              'assets/images/AppIcon1.png',
                               width: 150,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {

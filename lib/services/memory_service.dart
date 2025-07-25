@@ -31,6 +31,7 @@ class MemoryService {
     required DateTime date,
     String? imagePath,
     String? videoPath,
+    MemoryType type = MemoryType.memory,
   }) async {
     final memories = await _getMemories();
     final now = DateTime.now();
@@ -45,6 +46,7 @@ class MemoryService {
       videoPath: videoPath,
       createdAt: now,
       updatedAt: now,
+      type: type,
     );
 
     memories.add(newMemory);
