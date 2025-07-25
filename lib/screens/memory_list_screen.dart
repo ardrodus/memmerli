@@ -4,7 +4,7 @@ import 'package:memmerli/screens/memory_entry_screen.dart';
 import 'package:memmerli/services/auth_service.dart';
 import 'package:memmerli/services/memory_service.dart';
 import 'package:memmerli/theme/app_colors.dart';
-import 'package:memmerli/widgets/memory_card.dart';
+import 'package:memmerli/widgets/timeline_list.dart';
 
 class MemoryListScreen extends StatefulWidget {
   const MemoryListScreen({Key? key}) : super(key: key);
@@ -81,6 +81,7 @@ class _MemoryListScreenState extends State<MemoryListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Memmerli'),
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -107,56 +108,112 @@ class _MemoryListScreenState extends State<MemoryListScreen> {
       ),
     );
   }
+  
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: AppColors.accent1.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.photo_album_outlined,
-              size: 60,
-              color: AppColors.primary1.withOpacity(0.7),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'No Memories Yet',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary2,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              'Add your first memory by tapping the + button below.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.primary1,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+      child: InkWell(
+        onTap: () => _navigateToMemoryEntry(),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary2.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
+            ],
+            border: Border.all(
+              color: AppColors.accent1,
+              width: 1,
             ),
           ),
-          const SizedBox(height: 40),
-          ElevatedButton.icon(
-            onPressed: () => _navigateToMemoryEntry(),
-            icon: const Icon(Icons.add),
-            label: const Text('Add Your First Memory'),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Card header with accent color
+              Container(
+                width: double.infinity,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColors.secondary1,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Icon
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: AppColors.accent1.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.add_photo_alternate_outlined,
+                  size: 40,
+                  color: AppColors.primary1.withOpacity(0.7),
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Title
+              const Text(
+                'Add Your First Memory',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary2,
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Description
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32),
+                child: Text(
+                  'Create a special memory of your loved one by adding photos, videos, and descriptions.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.primary1,
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Button
+              Padding(
+                padding: const EdgeInsets.only(left: 32, right: 32, bottom: 24),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _navigateToMemoryEntry(),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Create Memory'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -193,16 +250,9 @@ class _MemoryListScreenState extends State<MemoryListScreen> {
   Widget _buildMemoriesList() {
     return RefreshIndicator(
       onRefresh: _loadUserAndMemories,
-      child: ListView.builder(
-        padding: const EdgeInsets.only(top: 16, bottom: 80),
-        itemCount: _memories.length,
-        itemBuilder: (context, index) {
-          final memory = _memories[index];
-          return MemoryCard(
-            memory: memory,
-            onTap: () => _navigateToMemoryEntry(memory: memory),
-          );
-        },
+      child: TimelineList(
+        memories: _memories,
+        onTapMemory: (memory) => _navigateToMemoryEntry(memory: memory),
       ),
     );
   }

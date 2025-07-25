@@ -167,19 +167,57 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
 
     final bool confirmDelete = await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Memory'),
-        content: const Text('Are you sure you want to delete this memory?'),
+        title: const Text(
+          'Delete Memory',
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.delete,
+                size: 40,
+                color: Colors.red,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'This action cannot be undone.',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Are you sure you want to permanently delete "${widget.memory?.title}"?',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Cancel'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
     ) ?? false;
 
@@ -192,14 +230,59 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
     });
 
     try {
+      // Show deletion in progress indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(width: 24),
+                  const Text('Deleting memory...'),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      
+      // Perform deletion with artificial delay for better UX
+      await Future.delayed(const Duration(milliseconds: 500));
       await MemoryService.deleteMemory(widget.memory!.id);
+      
+      // Close dialog
       if (mounted) {
         Navigator.of(context).pop();
       }
-    } catch (e) {
+      
+      // Show success message and return to previous screen
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
+          const SnackBar(
+            content: Text('Memory deleted successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      // Close dialog first
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      
+      // Then show error
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -216,13 +299,6 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditMode ? 'Edit Memory' : 'New Memory'),
-        actions: [
-          if (_isEditMode)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: _isLoading ? null : _deleteMemory,
-            ),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -402,20 +478,56 @@ class _MemoryEntryScreenState extends State<MemoryEntryScreen> {
                       ),
                       const SizedBox(height: 32),
                       
-                      // Save button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 55,
-                        child: ElevatedButton(
-                          onPressed: _saveMemory,
-                          child: Text(
-                            _isEditMode ? 'Save Changes' : 'Save Memory',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                      // Action buttons
+                      Column(
+                        children: [
+                          // Save button
+                          SizedBox(
+                            width: double.infinity,
+                            height: 55,
+                            child: ElevatedButton(
+                              onPressed: _saveMemory,
+                              child: Text(
+                                _isEditMode ? 'Save Changes' : 'Save Memory',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          
+                          // Delete button (only in edit mode)
+                          if (_isEditMode)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 55,
+                                child: TextButton.icon(
+                                  onPressed: _isLoading ? null : _deleteMemory,
+                                  icon: const Icon(
+                                    Icons.delete_outline,
+                                    color: Colors.red,
+                                  ),
+                                  label: const Text(
+                                    'Delete This Memory',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      side: const BorderSide(color: Colors.red, width: 1),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),

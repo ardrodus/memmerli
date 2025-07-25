@@ -108,6 +108,10 @@ class MemoryService {
 
   // Create sample data for testing
   static Future<void> createSampleData(String userId) async {
+    // No sample data will be created so you can test the empty state
+    // If you want to add sample data, uncomment the code below
+    
+    /*
     final memories = await _getMemories();
     
     // Only create sample data if there are no memories for this user
@@ -123,36 +127,16 @@ class MemoryService {
         title: "My Grandfather",
         description: "Remembering grandpa's stories during summer evenings. He used to tell us tales about his adventures as a young man.",
         date: DateTime(now.year - 2, now.month, now.day),
-        imagePath: null, // removed image path to avoid asset not found error
+        imagePath: null,
         videoPath: null,
         createdAt: now.subtract(const Duration(days: 30)),
         updatedAt: now.subtract(const Duration(days: 30)),
       ),
-      Memory(
-        id: _uuid.v4(),
-        userId: userId,
-        title: "My Grandmother's Recipes",
-        description: "Grandmother's famous apple pie recipe. She would make it every Sunday and the whole house would smell amazing.",
-        date: DateTime(now.year - 1, now.month - 2, now.day),
-        imagePath: null, // removed image path to avoid asset not found error
-        videoPath: null,
-        createdAt: now.subtract(const Duration(days: 15)),
-        updatedAt: now.subtract(const Duration(days: 15)),
-      ),
-      Memory(
-        id: _uuid.v4(),
-        userId: userId,
-        title: "Uncle Robert's Workshop",
-        description: "Memories of spending time in Uncle Robert's workshop. He taught me how to build my first birdhouse.",
-        date: DateTime(now.year - 3, now.month - 1, now.day - 5),
-        imagePath: null,
-        videoPath: null, // removed video path to avoid asset not found error
-        createdAt: now.subtract(const Duration(days: 7)),
-        updatedAt: now.subtract(const Duration(days: 7)),
-      ),
+      // Add more sample memories here if needed
     ];
 
     memories.addAll(sampleMemories);
     await _saveMemories(memories);
+    */
   }
 }
